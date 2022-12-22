@@ -1,6 +1,6 @@
 # HTTP2Grpc plugin for traefik
 
-[![Build Status](https://github.com/v-electrolux/http2grpc/workflows/Main/badge.svg?branch=master)](https://github.com/v-electrolux/http2grpc/actions)
+[![Build Status](https://github.com/v-electrolux/http2grpc/workflows/Main/badge.svg?branch=main)](https://github.com/v-electrolux/http2grpc/actions)
 
 This plugin is an attempt to implement converter of HTTP protocol to gRPC as a middleware plugin for Traefik.
 It is useful when you declare router to gRPC backend for gRPC client,
