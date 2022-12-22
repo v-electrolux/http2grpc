@@ -8,6 +8,11 @@ and additionally you want to intercept connection with middleware,
 that do HTTP request to third party services and forward it back to gRPC client.
 Forward Auth for example.
 
+For development, was used following gRPC specs:
+- https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md
+- https://github.com/grpc/grpc/blob/master/doc/http-grpc-status-mapping.md
+- https://grpc.github.io/grpc/core/md_doc_statuscodes.html
+
 ## Configuration
 
 ### Flags meaning
