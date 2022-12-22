@@ -1,0 +1,13 @@
+displayName: HTTP to gRPC status code converter
+type: middleware
+
+import: github.com/v-electrolux/http2grpc
+
+summary: |
+  When you use Forward Auth middleware for gRPC router,
+  you can face with a problem that external auth service return HTTP status code
+  but can not properly process by gRPC client.
+  This middleware solves this problem for you
+
+testData:
+  bodyAsStatusMessage: true
