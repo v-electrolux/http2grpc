@@ -85,7 +85,8 @@ func (h *HTTP2Grpc) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 }
 
 type http2grpcModifier struct {
-	responseWriter http.ResponseWriter
+	responseWriter        http.ResponseWriter
+	responseWriterFlusher http.Flusher
 	// sentHTTPStatusCode stores original http status code for use in Write method
 	sentHTTPStatusCode int
 	// backendUseGrpc is whether the backend send response in grpc format
@@ -98,11 +99,16 @@ type http2grpcModifier struct {
 
 func newHTTP2grpcModifier(rw http.ResponseWriter, bodyAsStatusMessage bool) http.ResponseWriter {
 	http2grpcMod := &http2grpcModifier{
-		responseWriter:      rw,
-		sentHTTPStatusCode:  http.StatusOK,
-		backendUseGrpc:      false,
-		bodyAsStatusMessage: bodyAsStatusMessage,
-		headerSent:          false,
+		responseWriter:        rw,
+		responseWriterFlusher: nil,
+		sentHTTPStatusCode:    http.StatusOK,
+		backendUseGrpc:        false,
+		bodyAsStatusMessage:   bodyAsStatusMessage,
+		headerSent:            false,
+	}
+
+	if flusher, ok := rw.(http.Flusher); ok {
+		http2grpcMod.responseWriterFlusher = flusher
 	}
 
 	return http2grpcMod
@@ -137,7 +143,16 @@ func (h *http2grpcModifier) Write(buf []byte) (int, error) {
 		body = buf
 	}
 
-	return h.responseWriter.Write(body)
+	count, err := h.responseWriter.Write(body)
+	LoggerDEBUG.Printf("Write() body wrote, length %d", len(body))
+
+	// need for gRPC stream, because response can be buffered
+	// delaying messages via stream
+	if h.responseWriterFlusher != nil {
+		h.responseWriterFlusher.Flush()
+	}
+
+	return count, err
 }
 
 func (h *http2grpcModifier) WriteHeader(statusCode int) {

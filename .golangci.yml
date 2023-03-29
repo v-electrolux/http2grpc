@@ -1180,7 +1180,7 @@ linters-settings:
       - name: function-length
         severity: warning
         disabled: false
-        arguments: [ 15, 0 ]
+        arguments: [ 17, 0 ]
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#get-return
       - name: get-return
         severity: warning

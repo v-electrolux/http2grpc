@@ -382,6 +382,9 @@ func testGrpcRequest(t *testing.T, data TestGrpcResData) {
 	handler.ServeHTTP(recorder, req)
 	resp := recorder.Result()
 
+	if !recorder.Flushed {
+		t.Errorf("expected rw.Flushed to be true")
+	}
 	assertStatusCode(t, resp, http.StatusOK)
 	assertBody(t, resp, data.expGrpcResBody)
 	switch data.backendGrpcResContentType {
